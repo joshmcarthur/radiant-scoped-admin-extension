@@ -1,0 +1,9 @@
+- unless current_user.site
+  - if allow_site_select?
+    %p{:style => 'float: left; margin-right: 32px'}
+      %label{:for=>"page_site_id", :Class => "admin_only"}
+        Site
+      - sites = Site.find(:all).map { |s| [s.name, s.id] }
+      - selection = {:include_blank => Page.is_shareable?}
+      - selection[:selected] = current_site.id if @page.new_record? && ! Page.is_shareable?
+      = select :page, :site_id, sites, selection

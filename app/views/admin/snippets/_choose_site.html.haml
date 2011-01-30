@@ -1,0 +1,7 @@
+- unless current_user.site
+  - if allow_site_select?
+    %p{:style => 'float: left; margin-right: 32px'}
+      %label{:for=>"snippet_site_id", :Class => "admin_only"}
+        Site
+        - sites = Site.find(:all).map { |s| [s.name, s.id] }
+        = select :snippet, :site_id, sites, :include_blank => Snippet.is_shareable?, :selected => @snippet.site_id || current_site.id
