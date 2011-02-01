@@ -30,13 +30,18 @@ class ScopedAdminExtension < Radiant::Extension
     Admin::UsersController.send :include, ScopedAdmin::AdminUsersControllerExt
     Admin::RolesController.send :include, ScopedAdmin::AdminRolesControllerExt
     
-        
-    unless admin.users.edit.form && admin.users.edit.form.include?('choose_site')
-      admin.users.edit.add :form, "choose_site", :after => "edit_roles" 
-      admin.layouts.edit.add :form, "choose_site", :before => "edit_timestamp" 
-      admin.snippets.edit.add :form, "choose_site", :before => "edit_filter"
-      admin.pages.edit.add :form, "choose_site"
-      admin.roles.edit.add :form, "choose_site"
+    [:users, :layouts, :snippets, :pages, :roles].each do |klass|
+      unless admin.send(klass).edit.form && admin.send(klass).edit.form.include?('choose_site')
+        admin.send(klass).edit.add :form, 'choose_site'
+      end
     end
+    
+    #unless admin.users.edit.form && admin.users.edit.form.include?('choose_site')
+    #  admin.users.edit.add :form, "choose_site", :after => "edit_roles" 
+    #  admin.layouts.edit.add :form, "choose_site", :before => "edit_timestamp" 
+    #  admin.snippets.edit.add :form, "choose_site", :before => "edit_filter"
+    #  admin.pages.edit.add :form, "choose_site"
+    #  admin.roles.edit.add :form, "choose_site", :before => "edit_timestamp"
+    #end
   end
 end
